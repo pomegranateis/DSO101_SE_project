@@ -27,8 +27,8 @@ jobs:
           docker build -t pomegranatei/backend:latest -f backend/Dockerfile.dev ./backend
           docker push pomegranatei/backend:latest
 
-      # Optional: If not using Render’s DB
-      - name: Build and Push DB
-        run: |
-          docker build -t pomegranatei/database:latest -f docker/database/Dockerfile .
-          docker push pomegranatei/database:latest
+      # # Optional: If not using Render’s DB
+      # - name: Build and Push DB
+      #   run: |
+      #     docker build -t pomegranatei/database:latest -f database/Dockerfile ./database
+      #     docker push pomegranatei/database:latest
