@@ -24,7 +24,8 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
     "pg": "^8.8.0",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

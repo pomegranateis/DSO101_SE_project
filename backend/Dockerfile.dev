@@ -10,7 +10,7 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 # Copy package files and install deps
 COPY package.json ./
 COPY sync-package-lock ./
-RUN npm install
+RUN npm install --include=dev
 
 # Copy source files
 COPY nodemon.json ./
