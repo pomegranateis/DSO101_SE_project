@@ -1,27 +1,28 @@
-# Use Node 18 Alpine for latest compatibility
+# Use Node 18 Alpine
 FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Environment config (optional)
+# Set environment variable for memory limit
 ENV NODE_OPTIONS=--max_old_space_size=4096
 
-# Copy package files and install deps
+# Copy package files
 COPY package.json ./
-COPY sync-package-lock ./
-RUN npm install --include=dev
 
-# Copy source files
-COPY nodemon.json ./
+# Install only production dependencies
+RUN npm install --only=production
+
+# Copy app source files
 COPY tsconfig.json ./
+# COPY nodemon.json ./ # Optional, can skip if not needed in prod
 COPY src ./src
 COPY database ./database
 
-# Add entrypoint if needed (still fine)
+# Add entrypoint if needed
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
-# 👇 Run dev script using ts-node-dev
-CMD ["npm", "run", "dev"]
+# Start the app
+CMD ["npm", "start"]

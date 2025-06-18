@@ -65,7 +65,7 @@ This project integrates a **BMI calculator** feature into a full-stack PERN (Pos
 ![alt text](img/10.png)
 ![alt text](img/9.png)
 
-## Stage 2: Part 1GitHub Actions Pipeline for Docker Builds
+## Stage 2: Part 1 GitHub Actions Pipeline for Docker Builds
 
 ### 1. GitHub Secrets Configuration
 Stored secrets under repository → Settings → Secrets and Variables → Repository secrets:
@@ -110,3 +110,50 @@ jobs:
 
 ![alt text](img/13.png)
 
+## Stage 2: Part 2 Jenkins Pipeline for Docker Builds
+
+### Description:
+Configured Jenkins to push code to GitHub only when a commit message contains @push.
+
+### Setup Summary:
+A local Jenkins instance was initialized using Docker:
+
+```bash
+docker run -d --name jenkins-local -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+```
+
+A Pipeline Job named:
+
+`DSO101_SE_project` was created with the following pipeline script:
+
+```groovy
+02230295_app_pipeline
+```
+
+Created GitHub credentials in Jenkins > Manage Credentials > Global:
+
+ID: `github-credentials`
+
+Username: `pomegranateis`
+
+Password: GitHub Personal Access Token (PAT) with repo access
+
+![alt text](img/18.png)
+
+### Pipeline Function:
+
+![alt text](img/17.png)
+
+Detects @push in commit message using:
+
+```groovy
+def commitMsg = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
+```
+
+If present, executes build, test, and push to GitHub using:
+
+```groovy
+git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/pomegranateis/DSO101_SE_project.git
+git push origin HEAD:main
+```
+![alt text](img/16.png)

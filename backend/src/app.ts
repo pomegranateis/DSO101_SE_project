@@ -10,20 +10,18 @@ import routes from "./routes";
 import { databaseConfig } from "./config";
 import HTTP_CODE from "./errors/httpCodes";
 
-export const API_PREFIX = "/api"; // ✅ moved here
+export const API_PREFIX = "/api";
 
-// Environment execution info
 console.log(`Running in ${PRODUCTION ? "PRODUCTION" : "DEVELOPMENT"} mode\n`);
 
-// Test database connection
 const knexConnection = knex(databaseConfig);
 knexConnection
   .raw(
     `
-  SELECT table_name
-  FROM information_schema.tables
-  WHERE table_schema='public';
-`
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema='public';
+  `
   )
   .then((data) => {
     console.log(data.rows);
@@ -42,7 +40,6 @@ app.set("REFRESH_JWT_SECRET", REFRESH_JWT_SECRET);
 
 app.disable("x-powered-by");
 app.use(morgan("dev"));
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -50,7 +47,11 @@ app.use(cookieParser());
 
 app.use(`${API_PREFIX}/public`, express.static("public"));
 app.use(`${API_PREFIX}/uploads`, express.static("uploads"));
-app.use(API_PREFIX, routes); 
+app.use(API_PREFIX, routes);
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("🚀 Backend is up and running!");
+});
 
 app.use(
   errorHandler((req: Request, res: Response, next: NextFunction) => {
@@ -64,7 +65,6 @@ interface ExpressError extends Error {
   additionalInfo?: any;
 }
 
-// 500 Internal Errors
 app.use(
   (err: ExpressError, req: Request, res: Response, next: NextFunction) => {
     const isUnexpectedError = err.status === undefined;
