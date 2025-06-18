@@ -65,6 +65,13 @@ This project integrates a **BMI calculator** feature into a full-stack PERN (Pos
 ![alt text](img/10.png)
 ![alt text](img/9.png)
 
+### Challenges Encountered
+**Docker Hub authentication errors**: Encountered permission issues during image push due to misconfigured DockerHub secrets.
+
+**Incorrect file paths**: GitHub Actions failed initially because Dockerfile paths weren’t aligned with repository structure.
+
+**Workflow triggers**: Needed to fine-tune the on.push configuration and match commit messages properly.
+
 ## Stage 2: Part 1 GitHub Actions Pipeline for Docker Builds
 
 ### 1. GitHub Secrets Configuration
@@ -157,3 +164,33 @@ git remote set-url origin https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/pome
 git push origin HEAD:main
 ```
 ![alt text](img/16.png)
+
+### Challenges Encountered
+**Port conflicts**: Jenkins couldn’t start on default port 8080 due to preoccupied processes. Resolved by identifying and killing processes using lsof.
+
+**Git setup issues**: Jenkins jobs failed with fatal: not a git repository until pipeline was configured to pull SCM properly.
+
+**PAT permissions**: Faced GitHub push failures due to missing repository access in the personal access token (PAT). Switching from public-only to full repository access resolved this.
+
+**Credential masking issues**: Ensuring Jenkins masked sensitive tokens and used correct withCredentials configuration.
+
+## Stage 3: Render Deployment (Incomplete)
+
+### Challenge Summary
+**Dockerfile issues**: Had to rebuild a production-ready Dockerfile due to missing compiled output (dist/index.js) and dev dependencies in production image.
+
+**Node module errors**: Errors like Cannot find module 'express' and TypeScript declaration issues blocked builds until dev dependencies were included and compiled first.
+
+**Environment variable conflicts**: Required manual adjustments to match .env structure for PostgreSQL in Render.
+
+**Render runtime errors**: Deployment logs showed Endpoint not Found and dist/index.js missing due to build script mismatches.
+
+**File not detected errors**: Docker builds failed to find package-lock.json due to .dockerignore and gitignore conflicts.
+
+## Conclusion
+
+Through Stage 1, the workflow was automated to build and push Docker images to Docker Hub. In Stage 2, Jenkins was configured locally to trigger a GitHub push when a specific commit message (@push) was detected, showcasing conditional pipeline logic and credential management.
+
+Although Stage 3 (Render Deployment) could not be fully completed, significant progress was made in containerizing the backend, preparing the environment variables, and pushing images to Docker Hub. Several build and runtime challenges were encountered, particularly related to Dockerfile configuration, dependency handling, and Render's deployment limitations.
+
+Despite not completing the final deployment stage, the core goals of CI/CD automation, secure credential handling, and Git-based triggers were successfully achieved. 
