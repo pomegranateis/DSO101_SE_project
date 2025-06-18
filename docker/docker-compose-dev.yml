@@ -1,4 +1,5 @@
 version: '3.4'
+
 services:
   database:
     image: postgres:12-alpine
@@ -7,16 +8,13 @@ services:
       POSTGRES_DB: db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: psswd
-      # PGDATA: /data/postgres
     volumes:
-      # Where our data will be persisted
       - database-data:/data/postgres
     ports:
-      # <Port exposed> : <Port running inside container>
       - "2345:5432"
     expose:
-      # Opens port 2345 on the container
-      - '2345'
+      - "2345"
+
   backend:
     depends_on:
       - database
@@ -26,24 +24,38 @@ services:
       dockerfile: Dockerfile.dev
     working_dir: /app
     environment:
-      # Depends on 'database' docker service configuration
-      DATABASE_HOST: 'database' # Docker service called 'database'
-      DATABASE_NAME: 'db'
-      DATABASE_USER: 'admin'
-      DATABASE_PASSWORD: 'psswd'
-      DATABASE_PORT: '5432'
+      DATABASE_HOST: database
+      DATABASE_NAME: db
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: psswd
+      DATABASE_PORT: 5432
       NODE_ENV: development
       JWT_SECRET: 87e3459aec28ec448228d4f990e80f14657daefc7f01a7146e1149663b30719d
       REFRESH_JWT_SECRET: 6c2723ab022250723988e5cf38e90908be10e82ee2ce802747d279f4dd7bc823
     volumes:
-        - "../backend/node_modules:/app/node_modules_for_local_development"
-        - "../backend/sync-package-lock:/app/sync-package-lock"
-        - "../backend/src:/app/src"
-        - "../backend/public:/app/public"
-        - "backend-uploads:/app/uploads"
+      - "../backend:/app"
     ports:
       - "3000:3000"
     command: "npm run develop"
+
+  test-backend:
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    depends_on:
+      - database
+    environment:
+      DATABASE_HOST: database
+      DATABASE_NAME: db
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: psswd
+      DATABASE_PORT: 5432
+      NODE_ENV: test
+    command: "npm test"
+    volumes:
+      - "../backend:/app"
+
   frontend:
     depends_on:
       - backend
@@ -55,12 +67,11 @@ services:
     environment:
       NODE_ENV: development
     volumes:
-        - "../frontend/node_modules:/app/node_modules_for_local_development"
-        - "../frontend/sync-package-lock:/app/sync-package-lock"
-        - "../frontend/src:/app/src"
+      - "../frontend:/app"
     ports:
       - "3010:3010"
     command: "npm run develop"
+
 volumes:
   database-data:
   backend-uploads:

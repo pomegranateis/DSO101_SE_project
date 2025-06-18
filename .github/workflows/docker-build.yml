@@ -1,0 +1,34 @@
+name: Docker Build and Push
+
+on:
+  push:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Frontend
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest -f docker/frontend/Dockerfile.dev .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+
+      - name: Build and Push Backend
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest -f docker/backend/Dockerfile.dev .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+
+      # Optional: If not using Render’s DB
+      - name: Build and Push DB
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/database:latest -f docker/database/Dockerfile .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/database:latest

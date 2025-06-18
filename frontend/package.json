@@ -8,7 +8,8 @@
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "serve-build": "serve build",
     "eslint-fix": "eslint --fix src/**/*.ts",
-    "eslint-report": "eslint src/**/*.ts* > eslint-report.txt"
+    "eslint-report": "eslint src/**/*.ts* > eslint-report.txt",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --mode development --env development"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
@@ -22,10 +23,10 @@
     "babel-loader": "^9.1.2",
     "css-loader": "^6.2.0",
     "eslint": "7.32.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-import": "2.24.2",
     "eslint-plugin-react": "7.25.1",
     "eslint-plugin-react-hooks": "4.2.0",
-    "eslint-config-react-app": "^7.0.1",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "6.3.2",
     "html-webpack-plugin": "5.3.2",
@@ -42,6 +43,7 @@
     "webpack-dev-server": "3.11.2"
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "i18next": "^21.2.0",
     "i18next-browser-languagedetector": "^6.1.2",
     "react": "^17.0.0",
