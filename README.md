@@ -65,7 +65,7 @@ This project integrates a **BMI calculator** feature into a full-stack PERN (Pos
 ![alt text](img/10.png)
 ![alt text](img/9.png)
 
-## Stage 2: GitHub Actions Pipeline for Docker Builds
+## Stage 2: Part 1GitHub Actions Pipeline for Docker Builds
 
 ### 1. GitHub Secrets Configuration
 Stored secrets under repository → Settings → Secrets and Variables → Repository secrets:
